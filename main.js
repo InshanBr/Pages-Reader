@@ -10,48 +10,57 @@ const linksLength = links.length - 1;
 const wait = (time) => {
     return new Promise(resolve => setTimeout(resolve, time));
 }
+const linksTime = 5000;
 let index = 0;
-let actualIndex = 0;
+let actualIndex = -1;
 
 const createWindow = () => {
     const frame = new BrowserWindow({
-        fullscreen: false,
+        fullscreen: true,
         autoHideMenuBar: true,
     });
 
-    // Responsavel por identificar o tipo de link, carrega-lo e impoedir de que o programa leia links muito rapido. IN PROGRESS
     async function delayReader() { 
+        start = Date.now();
+        hold = linksTime;
         while (true) {
             if (index != actualIndex) {
+                start = Date.now();
                 actualIndex = index;
                 frame.loadURL(links[index]);
+                if (links[index].includes('file://')) {
+                    frame.webContents.once('dom-ready', () => {
+                        frame.webContents.mainFrame.executeJavaScript(`
+                        new Promise((resolve, reject) => {
+                          const mediaElement = document.getElementsByName("media")[0];
+                          if (mediaElement && mediaElement.readyState >= 2) {
+                            resolve(mediaElement.duration);
+                          } else {
+                            mediaElement.addEventListener('loadedmetadata', () => {
+                              resolve(mediaElement.duration);
+                            });
+                          }
+                        });
+                      `)
+                      .then(time => {
+                        hold = 1000 + time * 1000;
+                      })
+                      .catch(error => {
+                        console.error(error);
+                      });
+                    });
+                } else {
+                    hold = linksTime;
+                }
+            }
+            if (Date.now() > start + hold) {
+                index = checkIndex(index, linksLength,1);
             }
             await wait(500);
         }
     }
 
-    // Responsavel por mudar o link caso passe o tempo. IN PROGRESS
-    // async function autoChange() { 
-    //     let start = Date.now()
-    //     let linkTimer = 2000;
-    //     let timer;
-    //     const savedIndex = index;
-    //     while (true) {
-    //         if (start) {
-
-    //         } else if (savedIndex != index) {
-    //             savedIndex = index;
-    //             start = Date.now();
-    //         }
-            
-    //         await wait(200);
-    //     }
-    // }
-
-    frame.loadURL(links[0]);
-
     delayReader();
-    //autoChange();
 
     globalShortcut.register('Escape', () => {
         frame.close();
