@@ -1,0 +1,15 @@
+{
+  "name": "pages-reader",
+  "version": "1.0.0",
+  "description": "System to show webpages and videos in slide style",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rodrigo Gomes",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}
