@@ -1,15 +1,32 @@
 {
   "name": "pages-reader",
+  "productName": "pages-reader",
   "version": "1.0.0",
   "description": "System to show webpages and videos in slide style",
-  "main": "main.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
   },
-  "author": "Rodrigo Gomes",
+  "keywords": [],
+  "author": {
+    "name": "Rodrigo Gomes",
+    "email": "rodrigogr1602@gmail.com"
+  },
   "license": "MIT",
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  },
   "devDependencies": {
-    "electron": "^28.0.0"
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-deb": "^7.2.0",
+    "@electron-forge/maker-rpm": "^7.2.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
+    "electron": "28.0.0"
   }
 }

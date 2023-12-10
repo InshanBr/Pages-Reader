@@ -1,5 +1,10 @@
 const { app, BrowserWindow, globalShortcut } = require('electron');
+const path = require('path');
 const fs = require('fs');
+
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
 
 const data = fs.readFileSync('links.txt', {
     encoding: 'utf8',
